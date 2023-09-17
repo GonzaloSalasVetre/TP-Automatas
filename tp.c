@@ -181,6 +181,7 @@ void perteneceAUnSistemaNumerico(char *cadena, unsigned *i, unsigned *j, unsigne
         return;
     }
     else {
+        //printf("%d \n", strlen(cadena));
         (*l)++;
         return;
     }
@@ -201,6 +202,10 @@ int main() {
     char *palabra = (char *)malloc(sizeof(char) * 100);
 
     fgets(palabra, 100, stdin);
+
+    if(palabra[strlen(palabra)-1] == 10) { // Cuando se lee de la terminal a veces 
+        palabra[strlen(palabra)-1] = '\0'; // se guarda un salto de linea
+    }
 
     lista listaDePalabras = (nodoL *)malloc(sizeof(nodoL));
     listaDePalabras->info = NULL;
