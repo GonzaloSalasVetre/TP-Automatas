@@ -2,19 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-
-typedef struct s {
-    int estadoFinal;
-    int **tt;
-    char *columnas;
-} sistemaNumerico;
-
-typedef struct nodo {
-    char *info;
-    struct nodo *sig;
-} nodoL;
-
-typedef nodoL* lista;
+#include "tp-aux.c"
 
 const int estadoFinalDecimales = 2;
 const char columnasDeDecimales[5] = {'+', '-', '0', 'd'}; // d -> digitos diferentes a cero
@@ -44,45 +32,18 @@ const int ttHexa[5][3] = {
                       };
 
 
-const sistemaNumerico decimal = {estadoFinalDecimales, ttDecimales, columnasDeDecimales};
-const sistemaNumerico octal = {estadoFinalOctales, ttOctales, columnasDeOctales};
-const sistemaNumerico hexadecimal = {estadoFinalHexa, ttHexa, columnasDeHexa};
+const infoAutomata decimal = {estadoFinalDecimales, ttDecimales, columnasDeDecimales};
+const infoAutomata octal = {estadoFinalOctales, ttOctales, columnasDeOctales};
+const infoAutomata hexadecimal = {estadoFinalHexa, ttHexa, columnasDeHexa};
 
-// Funciones Auxiliares ----------------------------------------------------------------------------
-
-int pasarCharAInt(char c) {
-    return c-48;
-}
-
-int between(int n, int min, int max) {
-    return n >= min && n <= max;
-}
+// Funciones auxiliares de Parte 1
 
 int perteneceAOctal(char c) {
     return between(pasarCharAInt(c), 0, 7);
 }
 
-int indiceColumnas(char c, char *columnas) {
-    unsigned i;
-    for (i = 0; columnas[i]; i++) {
-        if (columnas[i] == c) {
-            return i;
-        }
-    }
-    return i-1;
-}
-
 int esLetraHexa(char c) {
     return between(c, 65, 70);
-}
-
-
-
-void agregarPalabra(lista *listaDePalabras, char *palabra) {
-    lista aux = (nodoL *)malloc(sizeof(nodoL));
-	aux->info = palabra;
-	aux->sig = *listaDePalabras;
-	*listaDePalabras = aux;
 }
 
 
@@ -97,13 +58,13 @@ void separarPalabras(lista *listaDePalabras, char *cadena) {
             char *aux = (char *)malloc(sizeof (char) * 50);
             memset(aux, '\0', 50);
             strcpy(aux, palabra);
-            agregarPalabra(&(*listaDePalabras), aux);
+            agregarElemento(&(*listaDePalabras), aux);
             memset(palabra, '\0', 50);
             j = 0;
         }
         else if(i+1 == strlen(cadena)) {
             palabra[j] = cadena[i];
-            agregarPalabra(&(*listaDePalabras), palabra);
+            agregarElemento(&(*listaDePalabras), palabra);
         }
         else {
             palabra[j] = cadena[i];
@@ -111,26 +72,6 @@ void separarPalabras(lista *listaDePalabras, char *cadena) {
         }
     }
 }
-
-
-// Aca verifico si la palabra forma parte del lenguaje -----------------------------------------------
-
-int esPalabra(char *cadena, sistemaNumerico s) {
-
-    int estado = 0;
-    unsigned i;
-
-    for(i=0; cadena[i]; i++) { // Acá hice un pequeño cambio para poder pasar la matriz como parametro
-        estado = s.tt[estado*strlen(s.columnas) + indiceColumnas(cadena[i], s.columnas)];
-    }
-    
-    if(estado == s.estadoFinal) {
-        return 1;
-    }
-
-    return 0;
-}
-
 
 // Acá verifica si los caracteres pertenecen al alfabeto del lenguaje --------------------------------
 
@@ -188,8 +129,6 @@ void perteneceAUnSistemaNumerico(char *cadena, unsigned *i, unsigned *j, unsigne
 }
 
 
-
-
 // Main -----------------------------------------------------------------------------------
 
 int main() {
@@ -228,5 +167,4 @@ int main() {
     fclose(stdin);
 
     return 0;
-
 }
