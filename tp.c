@@ -208,7 +208,7 @@ int main() {
     unsigned cantHexa = 0;
     unsigned cantNoPertenece = 0;
 
-    char *palabra = "0xAB234$1234$01234$0123$0";
+    char *palabra = "0xAB234$1234$01234$0123$0$aaaa";
     lista listaDePalabras = (nodoL *)malloc(sizeof(nodoL));
     listaDePalabras->info = NULL;
     listaDePalabras->sig = NULL;
@@ -225,7 +225,7 @@ int main() {
     printf("Cantidad de numeros decimales: %d \n", cantDecimales);
     printf("Cantidad de numeros octales: %d \n", cantOctales);
     printf("Cantidad de numeros hexadecimales: %d \n", cantHexa);
-    printf("Cantidad de palabras que no pertenecen al lenguaje: %d \n", cantHexa);
+    printf("Cantidad de palabras que no pertenecen al lenguaje: %d \n", cantNoPertenece);
 
     return 0;
 
