@@ -18,6 +18,8 @@ typedef nodoL* lista;
 
 // Funciones Auxiliares ----------------------------------------------------------------------------
 
+// Parte 2
+
 int pasarCharAInt(char c) {
     return c-48;
 }
