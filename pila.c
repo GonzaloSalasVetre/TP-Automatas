@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 typedef struct tnodo {
-	int info;
+	double info;
 	struct tnodo* sgte;
 }nodo;
 
@@ -15,7 +15,7 @@ typedef struct tnodoC {
 
 typedef nodoC* stC;
 
-void push(st* pila,int x) {
+void push(st* pila,double x) {
 	st p = (st)malloc(sizeof(nodo));
 
 	p->info = x;
@@ -25,8 +25,8 @@ void push(st* pila,int x) {
 	return;
 }
 
-int pop(st* pila) {
-	int x = (*pila)->info;
+double pop(st* pila) {
+	double x = (*pila)->info;
 	st p = (*pila);
 
 	(*pila) = p->sgte;	
@@ -34,7 +34,7 @@ int pop(st* pila) {
 	return x;
 }
 
-void pushC(stC* pila,int x) {
+void pushC(stC* pila,char x) {
 	stC p = (stC)malloc(sizeof(nodoC));
 
 	p->info = x;
@@ -43,7 +43,7 @@ void pushC(stC* pila,int x) {
 	*pila = p;
 }
 
-int popC(stC* pila) {
+char popC(stC* pila) {
 	int x = (*pila)->info;
 	stC p = (*pila);
 
@@ -54,7 +54,7 @@ int popC(stC* pila) {
 
 void printStack(st s) {
   while (s->sgte != NULL) {
-    printf("%d", s->info);
+    printf("%f", s->info);
     printf("\n");
     s = s->sgte;
   }

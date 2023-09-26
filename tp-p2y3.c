@@ -15,24 +15,53 @@
 
 // Parte 3
 
+int esSumaOResta(char c) {
+    return c == '+' || c == '-';
+}
+
+int esMulODiv(char c) {
+    return c == '*' || c == '/';
+}
+
 void evaluar(char *cadena, st *pilaNumeros, stC *pilaOperadores) {
     for (unsigned i = 0; cadena[i]; i++) {
         if (isdigit(cadena[i])) {
-            int entero = 0;
+            double entero = 0;
             while (cadena[i] && isdigit(cadena[i])) {
                 entero = entero*10 + pasarCharAInt(cadena[i]);
                 i++;
             }
             push(&(*pilaNumeros), entero);
-            printf("%d \n", entero);
+            //printf("%d \n", entero);
             i--;
         }
         else {
             pushC(&(*pilaOperadores), cadena[i]);
-            printf("%c \n", cadena[i]);
+            //printf("%c \n", cadena[i]);
         }
-        
     }
+}
+
+double calcular(st pilaNumeros, stC pilaOperadores) {
+    while (pilaOperadores->sgte != NULL) {
+        char op = pilaOperadores->info;
+        if (esSumaOResta(op)) {
+            if (op == '+' && esSumaOResta(pilaOperadores->sgte->info)) {
+                double suma = pop(&pilaNumeros) + pop(&pilaNumeros);
+                push(&pilaNumeros, suma);
+                popC(&pilaOperadores);
+            }
+            else {
+                double suma = pop(&pilaNumeros) + pop(&pilaNumeros);
+                push(&pilaNumeros, suma);
+                popC(&pilaOperadores);
+            }
+        }
+        else {
+            continue;
+        }
+    }
+    return pilaNumeros->info;
 }
 
 int main() {
@@ -42,9 +71,9 @@ int main() {
     pilaOperadores->sgte = NULL;
 
     evaluar("12+2+3", &pilaNumeros, &pilaOperadores);
-
-    printStack(pilaNumeros);
-    printStackC(pilaOperadores);
+    calcular(pilaNumeros, pilaOperadores);
+    //printStack(pilaNumeros);
+    //printStackC(pilaOperadores);
 
     return 0;
 }
