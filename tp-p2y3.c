@@ -3,18 +3,6 @@
 #include "tp-aux.c"
 #include "pila.c"
 
-// Parte 2
-
-// int pasarCadenaAEntero(char *cadena) {
-//     int entero = 0;
-//     for (unsigned i = 0; cadena[i]; i++) {
-//         entero += pasarCharAInt(cadena[i])*potencia(10, strlen(cadena)-(i+1));
-//     }
-//     return entero;
-// }
-
-// Parte 3
-
 int esSumaOResta(char c) {
     return c == '+' || c == '-';
 }
@@ -23,7 +11,8 @@ int esMulODiv(char c) {
     return c == '*' || c == '/';
 }
 
-void evaluar(char *cadena, st *pilaNumeros, stC *pilaOperadores) {
+// Guarda operadores y numeros en pilas diferentes
+void separarOpYNum(char *cadena, st *pilaNumeros, stC *pilaOperadores) {
     for (unsigned i = 0; cadena[i]; i++) {
         if (isdigit(cadena[i])) {
             double entero = 0;
@@ -32,34 +21,42 @@ void evaluar(char *cadena, st *pilaNumeros, stC *pilaOperadores) {
                 i++;
             }
             push(&(*pilaNumeros), entero);
-            //printf("%d \n", entero);
             i--;
         }
         else {
             pushC(&(*pilaOperadores), cadena[i]);
-            //printf("%c \n", cadena[i]);
         }
     }
 }
 
-double calcular(st pilaNumeros, stC pilaOperadores) {
+double operar(double a, double b, char op) {
+    switch (op) {
+    case '+':
+        return a + b;
+    case '-':
+        return a - b;
+    case '/':
+        return a / b;
+    default:
+        return  a * b;
+    }
+}
+
+double calcularOperacion(st *pilaNumeros, stC *pilaOperadores) {
+    char op = popC(&(*pilaOperadores));
+    char sgteOp = (*pilaOperadores)->info;
+    double segNum = pop(&(*pilaNumeros));
+    if (esMulODiv(sgteOp))
+        calcularOperacion(&(*pilaNumeros), &(*pilaOperadores));
+    double priNum = pop(&(*pilaNumeros));
+    double resultado = operar(priNum, segNum, op);
+    push(&(*pilaNumeros), resultado);
+    return resultado;
+}
+
+double calcularExpresion(st pilaNumeros, stC pilaOperadores) {
     while (pilaOperadores->sgte != NULL) {
-        char op = pilaOperadores->info;
-        if (esSumaOResta(op)) {
-            if (op == '+' && esSumaOResta(pilaOperadores->sgte->info)) {
-                double suma = pop(&pilaNumeros) + pop(&pilaNumeros);
-                push(&pilaNumeros, suma);
-                popC(&pilaOperadores);
-            }
-            else {
-                double suma = pop(&pilaNumeros) + pop(&pilaNumeros);
-                push(&pilaNumeros, suma);
-                popC(&pilaOperadores);
-            }
-        }
-        else {
-            continue;
-        }
+        calcularOperacion(&pilaNumeros, &pilaOperadores);
     }
     return pilaNumeros->info;
 }
@@ -70,10 +67,16 @@ int main() {
     stC pilaOperadores = (stC)malloc(sizeof(stC));
     pilaOperadores->sgte = NULL;
 
-    evaluar("12+2+3", &pilaNumeros, &pilaOperadores);
-    calcular(pilaNumeros, pilaOperadores);
-    //printStack(pilaNumeros);
-    //printStackC(pilaOperadores);
+    char *calculo = (char *)malloc(sizeof(char) * 100);
+
+    fgets(calculo, 100, stdin);
+
+    if(calculo[strlen(calculo)-1] == 10) { // Cuando se lee de la terminal a veces 
+        calculo[strlen(calculo)-1] = '\0'; // se guarda un salto de linea
+    }
+
+    separarOpYNum(calculo, &pilaNumeros, &pilaOperadores);
+    printf("%f", calcularExpresion(pilaNumeros, pilaOperadores));
 
     return 0;
 }
