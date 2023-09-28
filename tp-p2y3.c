@@ -3,6 +3,18 @@
 #include "tp-aux.c"
 #include "pila.c"
 
+const int estadoFinalCalc = 1;
+const char columnasDeCalc[6] = {'+', '-', '*', '/', 'd'}; // d -> [1-9]
+const int ttCalculo[4][5] = {
+                                {3,3,3,3,1},
+                                {2,2,2,2,1},
+                                {3,3,3,3,1},
+                                {3,3,3,3,3}
+                              };
+
+
+const infoAutomata calculoMatematico = {estadoFinalCalc, ttCalculo, columnasDeCalc};
+
 int esSumaOResta(char c) {
     return c == '+' || c == '-';
 }
@@ -61,6 +73,16 @@ double calcularExpresion(st pilaNumeros, stC pilaOperadores) {
     return pilaNumeros->info;
 }
 
+int verificaCalculo(char *s) {
+    unsigned i;
+	for(i=0;s[i];i++) {
+	    if(!(esSumaOResta(s[i]) || esMulODiv(s[i]) || isdigit(s[i]))) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
 int main() {
     st pilaNumeros = (st)malloc(sizeof(st));
     pilaNumeros->sgte = NULL;
@@ -75,8 +97,13 @@ int main() {
         calculo[strlen(calculo)-1] = '\0'; // se guarda un salto de linea
     }
 
-    separarOpYNum(calculo, &pilaNumeros, &pilaOperadores);
-    printf("%f", calcularExpresion(pilaNumeros, pilaOperadores));
+    if (verificaCalculo(calculo) && esPalabra(calculo, calculoMatematico)) {
+        separarOpYNum(calculo, &pilaNumeros, &pilaOperadores);
+        printf("%f", calcularExpresion(pilaNumeros, pilaOperadores));
+        return 0;
+    }
+
+    printf("No es un calculo matematico");
 
     return 0;
 }
