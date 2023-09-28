@@ -46,6 +46,7 @@ double operar(double a, double b, char op) {
     case '-':
         return a - b;
     case '/':
+        if (b == 0) printf("\nNo se puede dividir por cero!\n\n");
         return a / b;
     default:
         return  a * b;
@@ -64,7 +65,7 @@ double calcularOperacion(st *pilaNumeros, stC *pilaOperadores) {
     return resultado;
 }
 
-double calcularExpresion(st pilaNumeros, stC pilaOperadores) {
+double realizarCalculo(st pilaNumeros, stC pilaOperadores) {
     while (pilaOperadores->sgte != NULL) {
         calcularOperacion(&pilaNumeros, &pilaOperadores);
     }
@@ -96,11 +97,12 @@ int main() {
 
     if (verificaCalculo(calculo) && esPalabra(calculo, calculoMatematico)) {
         separarOpYNum(calculo, &pilaNumeros, &pilaOperadores);
-        printf("%f", calcularExpresion(pilaNumeros, pilaOperadores));
-        return 0;
+        printf("\nEl resultado es: ");
+        printf("%f\n", realizarCalculo(pilaNumeros, pilaOperadores));
     }
-
-    printf("No es un calculo matematico");
+    else {
+        printf("No es un calculo matematico");
+    }
 
     free(pilaNumeros);
     free(pilaOperadores);

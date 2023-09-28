@@ -38,7 +38,7 @@ int indiceColumnas(char c, char *columnas) {
 int esPalabra(char *cadena, infoAutomata automata) {
     int estado = 0;
     unsigned i;
-    for(i=0; cadena[i]; i++) { // Acá hice un pequeño cambio para poder pasar la matriz como parametro
+    for(i=0; cadena[i]; i++) { // Acá hice un cambio porque me toma la matriz como un arreglo
         estado = automata.tt[estado*strlen(automata.columnas) + indiceColumnas(cadena[i], automata.columnas)];
     }
     if(estado == automata.estadoFinal) {
