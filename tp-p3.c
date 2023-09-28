@@ -35,9 +35,7 @@ void separarOpYNum(char *cadena, st *pilaNumeros, stC *pilaOperadores) {
             push(&(*pilaNumeros), entero);
             i--;
         }
-        else {
-            pushC(&(*pilaOperadores), cadena[i]);
-        }
+        else pushC(&(*pilaOperadores), cadena[i]);
     }
 }
 
@@ -93,9 +91,8 @@ int main() {
 
     fgets(calculo, 100, stdin);
 
-    if(calculo[strlen(calculo)-1] == 10) { // Cuando se lee de la terminal a veces 
-        calculo[strlen(calculo)-1] = '\0'; // se guarda un salto de linea
-    }
+    // Cuando se lee de la terminal a veces se guarda un salto de linea
+    if(calculo[strlen(calculo)-1] == 10) calculo[strlen(calculo)-1] = '\0';
 
     if (verificaCalculo(calculo) && esPalabra(calculo, calculoMatematico)) {
         separarOpYNum(calculo, &pilaNumeros, &pilaOperadores);

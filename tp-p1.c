@@ -47,24 +47,24 @@ int esLetraHexa(char c) {
     return between(c, 65, 70);
 }
 
-// Esta funcion lo que hace es guardar las palabras, separadas por el signo $, en una lista.
+// Esta funcion lo que hace es guardar las palabras separadas por el signo $, en una lista.
 void separarPalabras(stS *listaDePalabras, char *cadena) {
     char *palabra = (char *)malloc(sizeof (char) * 50);
     memset(palabra, '\0', 50); // Sirve para vaciar la palabra
     unsigned j = 0;
     for(unsigned i = 0; cadena[i]; i++){
         if(cadena[i] == '$') {
+            if (i == 0) continue;
             pushS(&(*listaDePalabras), strdup(palabra));
-            memset(palabra, '\0', 50);
+            memset(palabra, '\0', sizeof(palabra));
             j = 0;
-        }
-        else if(i+1 == strlen(cadena)) {
-            palabra[j] = cadena[i];
-            pushS(&(*listaDePalabras), strdup(palabra));
         }
         else {
             palabra[j] = cadena[i];
-            j++;
+            if(i+1 == strlen(cadena))
+                pushS(&(*listaDePalabras), strdup(palabra));
+            else j++;
+            
         }
     }
     free(palabra);
@@ -137,22 +137,16 @@ int main() {
 
     fgets(palabra, 100, stdin);
 
-    if(palabra[strlen(palabra)-1] == 10) { // Cuando se lee de la terminal a veces 
-        palabra[strlen(palabra)-1] = '\0'; // se guarda un salto de linea
-    }
-
+    // Cuando se lee de la terminal a veces se guarda un salto de linea
+    if(palabra[strlen(palabra)-1] == 10) palabra[strlen(palabra)-1] = '\0';
+    
     stS listaDePalabras = (stS)malloc(sizeof(nodoS));
     listaDePalabras->info = NULL;
     listaDePalabras->sgte = NULL;
-
-    printf(palabra);
-    printf("\n");
     
     separarPalabras(&listaDePalabras, palabra);
     
 	while(listaDePalabras->sgte != NULL){
-        printf(listaDePalabras->info);
-        printf("\n");
 		perteneceAUnSistemaNumerico(popS(&listaDePalabras), &cantDecimales, &cantOctales, &cantHexa, &cantNoPertenece);
 	}
 
