@@ -107,18 +107,22 @@ int verificaHexadecimales(char *s) {
 void perteneceAUnSistemaNumerico(char *cadena, unsigned *i, unsigned *j, unsigned *k, unsigned *l) { 
     if(verificaDecimales(cadena) && esPalabra(cadena, decimal) || !strcmp(cadena, "0")) {
         (*i)++;
+        printf("El numero %s es decimal", cadena);
         return;
     }
     if (verificaOctales(cadena) && esPalabra(cadena, octal)) {
         (*j)++;
+        printf("El numero %s es octal", cadena);
         return;
     }
     if(verificaHexadecimales(cadena) && esPalabra(cadena, hexadecimal)) {
         (*k)++;
+        printf("El numero %s es hexadecimal", cadena);
         return;
     }
     else {
         (*l)++;
+        printf("Esta cadena '%s' no pertenece al lenguaje", cadena);
         return;
     }
 }
@@ -139,21 +143,26 @@ int main() {
 
     // Cuando se lee de la terminal a veces se guarda un salto de linea
     if(palabra[strlen(palabra)-1] == 10) palabra[strlen(palabra)-1] = '\0';
-    
+
     stS listaDePalabras = (stS)malloc(sizeof(nodoS));
     listaDePalabras->info = NULL;
     listaDePalabras->sgte = NULL;
     
     separarPalabras(&listaDePalabras, palabra);
     
+    
+
 	while(listaDePalabras->sgte != NULL){
+        printf("\n");
 		perteneceAUnSistemaNumerico(popS(&listaDePalabras), &cantDecimales, &cantOctales, &cantHexa, &cantNoPertenece);
 	}
+
+    printf("\n");
 
     free(palabra);
     free(listaDePalabras);
 
-    printf("Cantidad de numeros decimales: %d \n", cantDecimales);
+    printf("\nCantidad de numeros decimales: %d \n", cantDecimales);
     printf("Cantidad de numeros octales: %d \n", cantOctales);
     printf("Cantidad de numeros hexadecimales: %d \n", cantHexa);
     printf("Cantidad de palabras que no pertenecen al lenguaje: %d \n", cantNoPertenece);
