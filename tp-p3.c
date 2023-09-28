@@ -84,9 +84,9 @@ int verificaCalculo(char *s) {
 }
 
 int main() {
-    st pilaNumeros = (st)malloc(sizeof(st));
+    st pilaNumeros = (st)malloc(sizeof(nodo));
     pilaNumeros->sgte = NULL;
-    stC pilaOperadores = (stC)malloc(sizeof(stC));
+    stC pilaOperadores = (stC)malloc(sizeof(nodoC));
     pilaOperadores->sgte = NULL;
 
     char *calculo = (char *)malloc(sizeof(char) * 100);
@@ -104,6 +104,12 @@ int main() {
     }
 
     printf("No es un calculo matematico");
+
+    free(pilaNumeros);
+    free(pilaOperadores);
+    free(calculo);
+
+    fclose(stdin);
 
     return 0;
 }
