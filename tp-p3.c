@@ -5,11 +5,10 @@
 
 const int estadoFinalCalc = 1;
 const char columnasDeCalc[6] = {'+', '-', '*', '/', 'd'}; // d -> [1-9]
-const int ttCalculo[4][5] = {
-                                {3,3,3,3,1},
+const int ttCalculo[3][5] = {
                                 {2,2,2,2,1},
-                                {3,3,3,3,1},
-                                {3,3,3,3,3}
+                                {0,0,0,0,1},
+                                {2,2,2,2,2}
                               };
 
 
